@@ -37,6 +37,8 @@ if [[ ! -f /usr/bin/node ]]; then
     apt-add-repository -y ppa:ondrej/php
   fi
 
+  curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash
+
   apt -y update
   apt -y dist-upgrade
 
