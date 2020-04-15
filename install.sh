@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [[ $UID == "0" ]]; then
-  echo "You need to run this script as root."
-  exit 1
-fi
-
 #######
 # NOTES
 #######
@@ -48,7 +43,7 @@ if [[ ! -f /usr/bin/node ]]; then
   apt install -y git curl wget net-tools dos2unix \
     apache2 mysql-client mysql-server psmisc htop screen openjdk-8-jre-headless openjdk-8-jdk \
     redis-server php5.6 php5.6-xdebug php5.6-mysql libapache2-mod-php5.6 \
-    php5.6-curl php5.6-json php5.6-xml php5.6-xml php5.6-zip php5.6-mbstring php5.6-gd \
+    php5.6-curl php5.6-json php5.6-xml php5.6-xml php5.6-zip php5.6-mbstring php5.6-gd php5.6-mcrypt \
     nodejs npm unzip maven tree
 
   # Make php5.6 the default
@@ -236,8 +231,9 @@ fi
 
 if [[ ! -d ${WWWDIR}/support_scripts/grunt/node_modules ]]; then
   pushd ${WWWDIR}/support_scripts/grunt
+  npm install -g gulp@3.9.1
   npm install --unsafe-perm node-sass
-  npm install semantic-ui-sass
+  npm install -g webpack@^2.0.0
   npm install
   grunt deploy
   popd
@@ -270,6 +266,7 @@ systemctl daemon-reload
 # Enable apache2 site
 #####################
 if [[ ! -f /etc/apache2/sites-available/matecat.conf ]]; then
+  cd
   sed "s#@WWWDIR@#${WWWDIR}#" < data/matecat-vhost.conf > /tmp/matecat.conf
   mv /tmp/matecat.conf /etc/apache2/sites-available
   a2dissite 000-default
