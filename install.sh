@@ -46,7 +46,7 @@ if [[ ! -f /usr/bin/node ]]; then
     apache2 mysql-client mysql-server psmisc htop screen openjdk-8-jre-headless openjdk-8-jdk \
     redis-server php5.6 php5.6-xdebug php5.6-mysql libapache2-mod-php5.6 \
     php5.6-curl php5.6-json php5.6-xml php5.6-xml php5.6-zip php5.6-mbstring php5.6-gd php5.6-mcrypt \
-    nodejs npm unzip maven tree
+    nodejs unzip maven tree
 
   # Make php5.6 the default
   update-alternatives --set php /usr/bin/php5.6
@@ -236,7 +236,10 @@ if [[ ! -d ${WWWDIR}/support_scripts/grunt/node_modules ]]; then
   npm install -g gulp@3.9.1
   npm install --unsafe-perm node-sass
   npm install -g webpack@^2.0.0
-  npm install
+  npm install -g --unsafe-perm=true --allow-root
+  cd semantic
+  gulp build
+  cd ..
   grunt deploy
   popd
 fi
@@ -268,8 +271,7 @@ systemctl daemon-reload
 # Enable apache2 site
 #####################
 if [[ ! -f /etc/apache2/sites-available/matecat.conf ]]; then
-  cd
-  sed "s#@WWWDIR@#${WWWDIR}#" < data/matecat-vhost.conf > /tmp/matecat.conf
+  sed "s#@WWWDIR@#${WWWDIR}#" < ${BASEDIR}/data/matecat-vhost.conf > /tmp/matecat.conf
   mv /tmp/matecat.conf /etc/apache2/sites-available
   a2dissite 000-default
   a2ensite matecat.conf
