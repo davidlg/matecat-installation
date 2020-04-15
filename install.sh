@@ -15,7 +15,7 @@ fi
 ###############################
 set -x
 BASEDIR=$(dirname `realpath $0`)
-SERVER="liumcat.univ-lemans.fr"
+SERVER="ec2-34-245-76-8.eu-west-1.compute.amazonaws.com"
 UNIXUSER="matecat"
 DBUSER=${UNIXUSER}
 WWWDIR="/home/${UNIXUSER}/www-data"
@@ -24,14 +24,13 @@ STORAGEDIR="${WWWDIR}/storage"
 ACTIVEMQ_VER="5.13.2"
 
 # Checkout specific commits to ensure reproducibility
-MATECAT_COMMIT="0f3f3ecaa45"
-MATECAT_FILTERS_COMMIT="82f8210448"
+MATECAT_COMMIT="v2.10.2"
+MATECAT_FILTERS_COMMIT="v1.2.5"
 FILTERS_DIR="/home/${UNIXUSER}/MateCat-Filters/filters/target"
-FILTERS_JAR="filters-1.2.3.jar"
+FILTERS_JAR="filters-1.2.5.jar"
 DUMP_DBPASS=
 set +x
 
-exit
 ##################
 # Install packages
 ##################
@@ -237,6 +236,8 @@ fi
 
 if [[ ! -d ${WWWDIR}/support_scripts/grunt/node_modules ]]; then
   pushd ${WWWDIR}/support_scripts/grunt
+  npm install --unsafe-perm node-sass
+  npm install semantic-ui-sass
   npm install
   grunt deploy
   popd
